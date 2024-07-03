@@ -8,29 +8,21 @@ type SelectBuilder struct {
 	*SelectStmt
 }
 
-func prepareSelect(a []string) []interface{} {
-	b := make([]interface{}, len(a))
-	for i := range a {
-		b[i] = a[i]
-	}
-	return b
-}
-
-func (sess *Session) Select(column ...string) *SelectBuilder {
+func (sess *Session) Select(column ...interface{}) *SelectBuilder {
 	return &SelectBuilder{
 		runner:        sess,
 		EventReceiver: sess,
 		Dialect:       sess.Dialect,
-		SelectStmt:    Select(prepareSelect(column)...),
+		SelectStmt:    Select(column...),
 	}
 }
 
-func (tx *Tx) Select(column ...string) *SelectBuilder {
+func (tx *Tx) Select(column ...interface{}) *SelectBuilder {
 	return &SelectBuilder{
 		runner:        tx,
 		EventReceiver: tx,
 		Dialect:       tx.Dialect,
-		SelectStmt:    Select(prepareSelect(column)...),
+		SelectStmt:    Select(column...),
 	}
 }
 
